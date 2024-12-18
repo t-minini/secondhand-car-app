@@ -13,8 +13,8 @@ namespace secondhand_car_app
         static string[] registerPlates;
         static string[] carMakers;
         static string[] models;
-        static double[] prices;
-        static double[] mileages;
+        static int[] prices;
+        static int[] mileages;
 
         static void Main(string[] args)
         {
@@ -59,8 +59,8 @@ namespace secondhand_car_app
             registerPlates = new string[totalCars];
             carMakers = new string[totalCars];
             models = new string[totalCars];
-            prices = new double[totalCars];
-            mileages = new double[totalCars];
+            prices = new int[totalCars];
+            mileages = new int[totalCars];
         }
 
         static void PopulateArrays(string[] csvFileLines)
@@ -74,8 +74,8 @@ namespace secondhand_car_app
                 string registerPlate = csvDataLines[0];
                 string carMake = csvDataLines[1];
                 string model = csvDataLines[2];
-                double price = Convert.ToDouble(csvDataLines[3]);
-                double mileage = Convert.ToDouble(csvDataLines[4]);
+                int price = Convert.ToInt32(csvDataLines[3]);
+                int mileage = Convert.ToInt32(csvDataLines[4]);
 
                 registerPlates[i - 1] = registerPlate;
                 carMakers[i - 1] = carMake;
@@ -90,19 +90,31 @@ namespace secondhand_car_app
             int totalCars = ReadCsvFile().Length - 1;
             double totalCarPrice = CalculateTotalCarPrice();
             double averageCarPrice = CalculateTotalCarPrice() / totalCars;
-            int mostExpensiveCar = IndexMostExpensiveCar();
-            int cheapestCar = IndexCheapestCar();
-            double averageCarMileage = CalculateTotalCarMileage() / totalCars;
+            int mostExpensiveCarIndex = IndexMostExpensiveCar();
+            int cheapestCarIndex = IndexCheapestCar();
+            int averageCarMileage = CalculateTotalCarMileage() / totalCars;
 
             string[] reportLines = new string[7];
 
             reportLines[0] = "******************** REPORT SUMMARY ********************";
-            reportLines[1] = "\n\tThe total number of cars is: {} cars.";
-            reportLines[2] = "\tThe total car price is: {} EUR.";
-            reportLines[3] = "\tThe average car price is: {} EUR.";
-            reportLines[4] = "\tMost expensive car info: {}.";
-            reportLines[5] = "\tCheapest car info: {}.";
-            reportLines[6] = "\tThe average car mileage: {} KMs.";
+            reportLines[1] = $"\n\tTotal number of cars: {totalCars} cars.";
+            reportLines[2] = $"\tTotal car price: {totalCarPrice.ToString("N0").Replace(",", ".")} EUR.";
+            reportLines[3] = $"\tAverage car price: {averageCarPrice.ToString("N0").Replace(",", ".")} EUR.";
+            reportLines[4] =
+                $"\tMost expensive car info:" +
+                $"\n\t\t\tReg. No.: {registerPlates[mostExpensiveCarIndex]}" +
+                $"\n\t\t\tCar Make: {carMakers[mostExpensiveCarIndex]}" +
+                $"\n\t\t\tCar Model: {models[mostExpensiveCarIndex]}" +
+                $"\n\t\t\tPrice: {prices[mostExpensiveCarIndex].ToString("N0").Replace(",",".")} EUR" +
+                $"\n\t\t\tMileage: {mileages[mostExpensiveCarIndex].ToString("N0").Replace(",",".")} KMs";
+            reportLines[5] =
+               $"\tCheapest car info:" +
+               $"\n\t\t\tReg. No.: {registerPlates[cheapestCarIndex]}" +
+               $"\n\t\t\tCar Make: {carMakers[cheapestCarIndex]}" +
+               $"\n\t\t\tCar Model: {models[cheapestCarIndex]}" +
+               $"\n\t\t\tPrice: {prices[cheapestCarIndex].ToString("N0").Replace(",", ".")} EUR" +
+               $"\n\t\t\tMileage: {mileages[cheapestCarIndex].ToString("N0").Replace(",", ".")} KMs";
+            reportLines[6] = $"\tAverage car mileage: {averageCarMileage.ToString("N0").Replace(",",".")} KMs.";
 
             for (int i = 0; i < reportLines.Length; i++) 
             {
@@ -112,24 +124,54 @@ namespace secondhand_car_app
             WriteTxtFile(reportLines);
         }
 
-        static double CalculateTotalCarPrice()
+        static int CalculateTotalCarPrice()
         {
-            // continue here
+            int totalPrice = 0;
+            for (int i = 0; i < prices.Length; i++) 
+            { 
+                totalPrice += prices[i];
+            }
+            return totalPrice;
         }
 
         static int IndexMostExpensiveCar()
         {
-            return 1;
+            int indexMostExpensive = 0;
+            int mostExpensive = prices[0];
+            for (int i = 1; i < prices.Length; i++) 
+            {
+                if (prices[i] > mostExpensive) 
+                {
+                    mostExpensive = prices[i];
+                    indexMostExpensive = i;
+                }
+            }
+            return indexMostExpensive;
         }
 
         static int IndexCheapestCar()
         {
-            return 1;
+            int indexCheapest = 0;
+            int cheapest = prices[0];
+            for (int i = 1; i < prices.Length; i++) 
+            {
+                if (prices[i] < cheapest)
+                {
+                    cheapest = prices[i];
+                    indexCheapest = i;
+                }
+            }
+            return indexCheapest;
         }
 
-        static double CalculateTotalCarMileage()
+        static int CalculateTotalCarMileage()
         {
-            return 1.1;
+            int totalMileage = 0;
+            for (int i = 0; i < mileages.Length; i++)
+            {
+                totalMileage = totalMileage + mileages[i];
+            }
+            return totalMileage;
         }
     }
 }
