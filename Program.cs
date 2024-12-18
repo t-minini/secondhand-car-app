@@ -31,7 +31,7 @@ namespace secondhand_car_app
             try
             {
                 string[] csvFileLines = File.ReadAllLines(csvFile);
-                Console.WriteLine("STATUS: FILE READ SUCCESSFULLY!!");
+                //Console.WriteLine("STATUS: FILE READ SUCCESSFULLY!!");
                 return csvFileLines;
             }
             catch (Exception error)
@@ -46,7 +46,7 @@ namespace secondhand_car_app
             try
             {
                 File.WriteAllLines(txtFile, reportLines);
-                Console.WriteLine("STATUS: REPORT TXT FILE CREATED SUCCESSFULLY!!");
+                Console.WriteLine("\n\tSTATUS: REPORT TXT FILE CREATED SUCCESSFULLY!!");
             }
             catch (Exception error)
             {
@@ -93,11 +93,28 @@ namespace secondhand_car_app
             int mostExpensiveCar = IndexMostExpensiveCar();
             int cheapestCar = IndexCheapestCar();
             double averageCarMileage = CalculateTotalCarMileage() / totalCars;
+
+            string[] reportLines = new string[7];
+
+            reportLines[0] = "******************** REPORT SUMMARY ********************";
+            reportLines[1] = "\n\tThe total number of cars is: {} cars.";
+            reportLines[2] = "\tThe total car price is: {} EUR.";
+            reportLines[3] = "\tThe average car price is: {} EUR.";
+            reportLines[4] = "\tMost expensive car info: {}.";
+            reportLines[5] = "\tCheapest car info: {}.";
+            reportLines[6] = "\tThe average car mileage: {} KMs.";
+
+            for (int i = 0; i < reportLines.Length; i++) 
+            {
+                Console.WriteLine(reportLines[i]);
+            }
+
+            WriteTxtFile(reportLines);
         }
 
         static double CalculateTotalCarPrice()
         {
-            return 1.1;
+            // continue here
         }
 
         static int IndexMostExpensiveCar()
